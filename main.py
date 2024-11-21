@@ -39,6 +39,8 @@ def main() -> None:
 
     # Create and display the animation
     plotter.create_animation()
+
+    # Plot the Elbow and Shoulder angles
     plotter.plot_angles()
 
 

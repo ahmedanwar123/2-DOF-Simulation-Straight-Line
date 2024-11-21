@@ -8,7 +8,7 @@ MAX_REACH: int = L1 + L2  # Maximum reach of the manipulator in mm
 
 
 def LINE_EQN(x: float) -> float:
-    return -x / 20 + 40
+    return -x / 2 + 10
 
 
 LINE_EQN_SOURCE: str = inspect.getsource(LINE_EQN).strip().split("return")[-1].strip()

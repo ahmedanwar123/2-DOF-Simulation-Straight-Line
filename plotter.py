@@ -46,13 +46,21 @@ class Plotter:
         )
         (self.end_effector,) = self.ax.plot([], [], "ro", label="End Effector")
 
-    def init(self) -> Tuple:
+    def init(self) -> Tuple[plt.Line2D, plt.Line2D, plt.Line2D]:
+        """
+        Initialize the lines for the animation.
+        Returns a tuple of the line objects.
+        """
         self.link1_line.set_data([], [])
         self.link2_line.set_data([], [])
         self.end_effector.set_data([], [])
         return self.link1_line, self.link2_line, self.end_effector
 
-    def update(self, frame: int) -> Tuple:
+    def update(self, frame: int) -> Tuple[plt.Line2D, plt.Line2D, plt.Line2D]:
+        """
+        Update the plot for each frame in the animation.
+        Returns updated line objects.
+        """
         x, y = self.path_points[frame]
 
         # Compute inverse kinematics
@@ -78,6 +86,9 @@ class Plotter:
         return self.link1_line, self.link2_line, self.end_effector
 
     def create_animation(self) -> None:
+        """
+        Create and display the animation of the manipulator moving along the path.
+        """
         ani = FuncAnimation(  # noqa: F841
             self.fig,
             self.update,
@@ -90,18 +101,27 @@ class Plotter:
         plt.show()
 
     def plot_angles(self) -> None:
-        """Plot theta1 and theta2 in separate graphs and save each plot with an incrementing counter."""
-
+        """
+        Plot theta1 and theta2 in separate graphs and save each plot with a sequential counter.
+        """
         # Create a folder to save the images if it doesn't exist
         save_dir = "angle_plots"
         os.makedirs(save_dir, exist_ok=True)
 
-        # Load the current counter for filenames
-        counter = (
-            len([name for name in os.listdir(save_dir) if name.endswith(".png")]) + 1
-        )
+        # Initialize the counter to the next available file number
+        counter = 1
 
-        # Plot theta1 (shoulder angle) and save with an incrementing counter
+        # Check for existing files and find the next available counter
+        existing_files = [name for name in os.listdir(save_dir) if name.endswith(".png")]
+        if existing_files:
+            # Extract the counter from existing files (assuming filenames like "shoulder_angle_plot_1.png")
+            existing_counters = [
+                int(name.split("_")[-1].split(".")[0]) for name in existing_files
+            ]
+            # Get the next available counter (the smallest missing number)
+            counter = max(existing_counters) + 1
+
+        # Plot theta1 (shoulder angle) and save with a sequential counter
         fig1, ax1 = plt.subplots(figsize=(8, 5))
         ax1.plot(self.theta1_values, color="blue")
         ax1.set_title("Shoulder Angle (theta1)")
@@ -112,7 +132,7 @@ class Plotter:
         plt.savefig(theta1_filename)
         print(f"Shoulder angle plot saved as {theta1_filename}")
 
-        # Plot theta2 (elbow angle) and save with an incrementing counter
+        # Plot theta2 (elbow angle) and save with a sequential counter
         fig2, ax2 = plt.subplots(figsize=(8, 5))
         ax2.plot(self.theta2_values, color="green")
         ax2.set_title("Elbow Angle (theta2)")
