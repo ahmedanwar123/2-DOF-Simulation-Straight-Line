@@ -8,10 +8,9 @@ MAX_REACH: int = L1 + L2  # Maximum reach of the manipulator in mm
 
 
 def LINE_EQN(x: float) -> float:
-    return -x / 2 + 10
+    return -x / 20 + 40
 
 
-# Retrieve the function's source code as a string
 LINE_EQN_SOURCE: str = inspect.getsource(LINE_EQN).strip().split("return")[-1].strip()
 
 # Convert the expression to LaTeX format

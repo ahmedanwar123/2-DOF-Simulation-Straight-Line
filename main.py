@@ -39,6 +39,7 @@ def main() -> None:
 
     # Create and display the animation
     plotter.create_animation()
+    plotter.plot_angles()
 
 
 if __name__ == "__main__":

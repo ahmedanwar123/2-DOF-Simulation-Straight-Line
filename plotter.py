@@ -1,8 +1,9 @@
 import math
+import os
 import matplotlib.pyplot as plt
-import constants as c
 from matplotlib.animation import FuncAnimation
 from manipulator import Manipulator
+import constants as c
 from path_generator import PathGenerator
 from typing import List, Tuple
 
@@ -15,7 +16,11 @@ class Plotter:
             self.path_generator.generate_path()
         )
 
-        # Setup plot
+        # Lists to store theta values
+        self.theta1_values: List[float] = []
+        self.theta2_values: List[float] = []
+
+        # Set up animation plot for manipulator movement
         self.fig, self.ax = plt.subplots()
         self.ax.set_aspect("equal")
         self.ax.set_xlim(-100, 100)
@@ -24,15 +29,15 @@ class Plotter:
         self.ax.set_xlabel("X (mm)")
         self.ax.set_ylabel("Y (mm)")
 
-        # Draw the full target line for reference
-        line_x: List[float] = [-90, 90]
-        line_y: List[float] = [c.LINE_EQN(x) for x in line_x]
+        # Plot target line for reference
+        line_x = [-90, 90]
+        line_y = [c.LINE_EQN(x) for x in line_x]
         self.ax.plot(
             line_x, line_y, "r--", label=f"Target Line (y = {c.LINE_EQN_LABEL})"
         )
         self.ax.legend()
 
-        # Link lines and end-effector point
+        # Manipulator links
         (self.link1_line,) = self.ax.plot(
             [], [], "o-", lw=4, color="blue", label="Link 1"
         )
@@ -48,25 +53,24 @@ class Plotter:
         return self.link1_line, self.link2_line, self.end_effector
 
     def update(self, frame: int) -> Tuple:
-        # Looping through path points
-        x, y = self.path_points[frame % len(self.path_points)]
+        x, y = self.path_points[frame]
 
         # Compute inverse kinematics
         theta1, theta2 = self.manipulator.inverse_kinematics(x, y)
         if theta1 is None or theta2 is None:
-            return (
-                self.link1_line,
-                self.link2_line,
-                self.end_effector,
-            )  # Skip if point is out of reach
+            return self.link1_line, self.link2_line, self.end_effector
+
+        # Capture the angles
+        self.theta1_values.append(math.degrees(theta1))
+        self.theta2_values.append(math.degrees(theta2))
 
         # Calculate link positions
-        x1: float = self.manipulator.L1 * math.cos(theta1)
-        y1: float = self.manipulator.L1 * math.sin(theta1)
-        x2: float = x1 + self.manipulator.L2 * math.cos(theta1 + theta2)
-        y2: float = y1 + self.manipulator.L2 * math.sin(theta1 + theta2)
+        x1 = self.manipulator.L1 * math.cos(theta1)
+        y1 = self.manipulator.L1 * math.sin(theta1)
+        x2 = x1 + self.manipulator.L2 * math.cos(theta1 + theta2)
+        y2 = y1 + self.manipulator.L2 * math.sin(theta1 + theta2)
 
-        # Update link lines and end-effector position
+        # Update link positions
         self.link1_line.set_data([0, x1], [0, y1])
         self.link2_line.set_data([x1, x2], [y1, y2])
         self.end_effector.set_data(x2, y2)
@@ -77,10 +81,47 @@ class Plotter:
         ani = FuncAnimation(  # noqa: F841
             self.fig,
             self.update,
-            frames=len(self.path_points) * 2,  # Repeat the path points
+            frames=len(self.path_points),
             init_func=self.init,
             blit=True,
             interval=100,
-            repeat=True,  # Loop the animation continuously
+            repeat=False,
         )
+        plt.show()
+
+    def plot_angles(self) -> None:
+        """Plot theta1 and theta2 in separate graphs and save each plot with an incrementing counter."""
+
+        # Create a folder to save the images if it doesn't exist
+        save_dir = "angle_plots"
+        os.makedirs(save_dir, exist_ok=True)
+
+        # Load the current counter for filenames
+        counter = (
+            len([name for name in os.listdir(save_dir) if name.endswith(".png")]) + 1
+        )
+
+        # Plot theta1 (shoulder angle) and save with an incrementing counter
+        fig1, ax1 = plt.subplots(figsize=(8, 5))
+        ax1.plot(self.theta1_values, color="blue")
+        ax1.set_title("Shoulder Angle (theta1)")
+        ax1.set_xlabel("Step")
+        ax1.set_ylabel("Angle (degrees)")
+        ax1.grid(True)
+        theta1_filename = os.path.join(save_dir, f"shoulder_angle_plot_{counter}.png")
+        plt.savefig(theta1_filename)
+        print(f"Shoulder angle plot saved as {theta1_filename}")
+
+        # Plot theta2 (elbow angle) and save with an incrementing counter
+        fig2, ax2 = plt.subplots(figsize=(8, 5))
+        ax2.plot(self.theta2_values, color="green")
+        ax2.set_title("Elbow Angle (theta2)")
+        ax2.set_xlabel("Step")
+        ax2.set_ylabel("Angle (degrees)")
+        ax2.grid(True)
+        theta2_filename = os.path.join(save_dir, f"elbow_angle_plot_{counter}.png")
+        plt.savefig(theta2_filename)
+        print(f"Elbow angle plot saved as {theta2_filename}")
+
+        # Show the plots
         plt.show()
