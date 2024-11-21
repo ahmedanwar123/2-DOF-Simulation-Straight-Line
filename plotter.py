@@ -112,7 +112,9 @@ class Plotter:
         counter = 1
 
         # Check for existing files and find the next available counter
-        existing_files = [name for name in os.listdir(save_dir) if name.endswith(".png")]
+        existing_files = [
+            name for name in os.listdir(save_dir) if name.endswith(".png")
+        ]
         if existing_files:
             # Extract the counter from existing files (assuming filenames like "shoulder_angle_plot_1.png")
             existing_counters = [
