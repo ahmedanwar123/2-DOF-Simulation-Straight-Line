@@ -20,7 +20,7 @@ class PathGenerator:
         path_points: List[Tuple[float, float]] = []
         x: float = -180
         while x <= 180:
-            y: float = c.LINE_EQN(x)  # y-intercept in cm
+            y: float = c.LINE_EQN(x)
             if math.sqrt(x**2 + y**2) <= self.MAX_REACH:  # Ensure it's not out of reach
                 path_points.append((x, y))
             x += self.STEP_SIZE
