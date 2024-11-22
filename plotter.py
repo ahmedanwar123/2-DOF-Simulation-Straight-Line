@@ -16,11 +16,11 @@ class Plotter:
             self.path_generator.generate_path()
         )
 
-        # Lists to store theta values
+        # Lists to store an gles values
         self.theta1_values: List[float] = []
         self.theta2_values: List[float] = []
 
-        # Set up animation plot for manipulator movement
+        # Animation plot for manipulator movement
         self.fig, self.ax = plt.subplots()
         self.ax.set_aspect("equal")
         self.ax.set_xlim(-100, 100)
@@ -29,7 +29,7 @@ class Plotter:
         self.ax.set_xlabel("X (mm)")
         self.ax.set_ylabel("Y (mm)")
 
-        # Plot target line for reference
+        # Plot the line y = mx + b
         line_x = [-90, 90]
         line_y = [c.LINE_EQN(x) for x in line_x]
         self.ax.plot(
@@ -68,7 +68,7 @@ class Plotter:
         if theta1 is None or theta2 is None:
             return self.link1_line, self.link2_line, self.end_effector
 
-        # Capture the angles
+        # Store the angles
         self.theta1_values.append(math.degrees(theta1))
         self.theta2_values.append(math.degrees(theta2))
 

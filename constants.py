@@ -1,10 +1,10 @@
 import inspect
 
-# Constants for the manipulator
-L1: float = 50  # Length of link 1 in mm
-L2: float = 40  # Length of link 2 in mm
-STEP_SIZE: float = 2  # Step size along the line in mm
-MAX_REACH: int = L1 + L2  # Maximum reach of the manipulator in mm
+# Constants
+L1: float = 50  # Link 1 length in mm
+L2: float = 40  # Link 2 length in mm
+STEP_SIZE: float = 2  # Step size in mm
+MAX_REACH: int = L1 + L2  # Maximum reach in mm
 
 
 def LINE_EQN(x: float) -> float:
