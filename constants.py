@@ -8,12 +8,11 @@ MAX_REACH: int = L1 + L2  # Maximum reach in mm
 
 
 def LINE_EQN(x: float) -> float:
-    return -x / 2 + 10
+    return -x / 2 + 100
 
 
 LINE_EQN_SOURCE: str = inspect.getsource(LINE_EQN).strip().split("return")[-1].strip()
 
-# Convert the expression to LaTeX format
-LINE_EQN_LABEL: str = (
-    f"${LINE_EQN_SOURCE.replace('/', ' / ').replace('+', ' + ').replace('-', ' - ')}$"
-)
+LINE_EQN_LABEL: str = f"${LINE_EQN_SOURCE.replace('100', '10').replace('/', ' / ').replace('+', ' + ').replace('-', ' - ')}$"
+
+print(LINE_EQN_LABEL)

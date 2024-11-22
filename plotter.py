@@ -68,7 +68,7 @@ class Plotter:
         if theta1 is None or theta2 is None:
             return self.link1_line, self.link2_line, self.end_effector
 
-        # Store the angles
+        # Capture the angles
         self.theta1_values.append(math.degrees(theta1))
         self.theta2_values.append(math.degrees(theta2))
 
@@ -97,6 +97,7 @@ class Plotter:
             blit=True,
             interval=100,
             repeat=False,
+            # repeat=True,
         )
         plt.show()
 
