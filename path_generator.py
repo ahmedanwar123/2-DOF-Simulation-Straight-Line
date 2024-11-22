@@ -18,8 +18,8 @@ class PathGenerator:
         Returns a list of (x, y) points.
         """
         path_points: List[Tuple[float, float]] = []
-        x: float = -90  # Start from -90 mm and increment by STEP_SIZE
-        while x <= 90:
+        x: float = -180
+        while x <= 180:
             y: float = c.LINE_EQN(x)  # y-intercept in cm
             if math.sqrt(x**2 + y**2) <= self.MAX_REACH:  # Ensure it's not out of reach
                 path_points.append((x, y))
