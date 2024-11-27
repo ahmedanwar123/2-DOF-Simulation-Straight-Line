@@ -8,7 +8,7 @@ the equation y =  mx + b, where x ranges from -90 mm to 90 mm.
 
 The system is divided into three main components:
 1. "Manipulator": This class handles the inverse kinematics calculations,
-   determining the required joint angles (theta1 and theta2) to move the manipulator
+   determining t    he required joint angles (theta1 and theta2) to move the manipulator
    to the desired position (x, y).
 
 2. "PathGenerator": This class generates the path that the manipulator must follow,
