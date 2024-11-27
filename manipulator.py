@@ -16,7 +16,7 @@ class Manipulator:
         Calculate the inverse kinematics for a 2-link manipulator.
         Returns the joint angles (theta1, theta2) or None if out of reach.
         """
-        d: float = math.sqrt(x**2 + y**2)
+        d: float = math.sqrt(x**2 + y**2)  # Maximum reach of the manipulator
         if d > self.MAX_REACH or d < abs(self.L1 - self.L2):
             return None, None  # Out of reach
 
