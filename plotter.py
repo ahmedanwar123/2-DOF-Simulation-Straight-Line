@@ -39,10 +39,20 @@ class Plotter:
 
         # Manipulator links
         (self.link1_line,) = self.ax.plot(
-            [], [], "o-", lw=4, color="blue", label="Link 1"
+            [],
+            [],
+            "o-",
+            lw=4,
+            color="blue",
+            label="Link 1",  # Initializing the plot object for link 1
         )
         (self.link2_line,) = self.ax.plot(
-            [], [], "o-", lw=4, color="green", label="Link 2"
+            [],
+            [],
+            "o-",
+            lw=4,
+            color="green",
+            label="Link 2",  # Initializing the plot object for link 2
         )
         (self.end_effector,) = self.ax.plot([], [], "ro", label="End Effector")
 
@@ -96,8 +106,8 @@ class Plotter:
             init_func=self.init,
             blit=True,
             interval=100,
-            repeat=False,
-            # repeat=True,
+            # repeat=False,
+            repeat=True,
         )
         plt.show()
 
